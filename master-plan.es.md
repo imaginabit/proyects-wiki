@@ -10,7 +10,8 @@ git clone git@github.com-imaginabit:imaginabit/proyects-wiki.git ~/projects/proy
 
 Las carpetas `arquitectura/`, `lecciones/`, `estilos/`, `snippets/`, `proyectos/` y `_templates/` ya están creadas. No se necesita ningún paso adicional.
 
-## 2. El "Contrato" de Memoria (CLAUDE.md)
+## 2. El "Contrato" de Memoria (CLAUDE.md + hooks)
+
 El contrato de comportamiento vive en `CLAUDE.md` en la raíz de este repo. Claude Code lo lee automáticamente cuando trabajas dentro del proyecto.
 
 Para que esté disponible de forma global (en todos los proyectos), cópialo a tu config de usuario:
@@ -18,7 +19,7 @@ Para que esté disponible de forma global (en todos los proyectos), cópialo a t
 cp ~/projects/proyects-wiki/CLAUDE.md ~/.claude/CLAUDE.md
 ```
 
-O pega su contenido en tu `~/.claude/CLAUDE.md` existente bajo una sección `## Memory-Wiki`.
+Luego agrega los hooks a `~/.claude/settings.json` para que Claude cargue el wiki automáticamente al iniciar cada sesión y reciba un recordatorio de actualizarlo al final de cada turno. El JSON exacto a pegar está en la sección **Setup de hooks** de `CLAUDE.md`.
 
 ## 3. Plantilla de Nota de Memoria
 Crea el archivo `~/projects-wiki/_templates/nota_base.md`. Cada vez que generes conocimiento nuevo, usa este Frontmatter para que mi Obsidian lo organice:

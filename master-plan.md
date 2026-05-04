@@ -10,7 +10,8 @@ git clone git@github.com-imaginabit:imaginabit/proyects-wiki.git ~/projects/proy
 
 The folders `arquitectura/`, `lecciones/`, `estilos/`, `snippets/`, `proyectos/`, and `_templates/` are already created. No extra setup needed.
 
-## 2. The Memory "Contract" (CLAUDE.md)
+## 2. The Memory "Contract" (CLAUDE.md + hooks)
+
 The behaviour contract lives in `CLAUDE.md` at the root of this repo. Claude Code reads it automatically whenever you work inside the project.
 
 To make it available globally (across all projects), copy it to your user Claude config:
@@ -18,7 +19,7 @@ To make it available globally (across all projects), copy it to your user Claude
 cp ~/projects/proyects-wiki/CLAUDE.md ~/.claude/CLAUDE.md
 ```
 
-Or paste its contents into your existing `~/.claude/CLAUDE.md` under a `## Memory-Wiki` section.
+Then add the hooks to `~/.claude/settings.json` so Claude loads the wiki automatically at session start and gets a reminder to update it at the end of each turn. The exact JSON to paste is in the **Setup de hooks** section of `CLAUDE.md`.
 
 ## 3. Memory Note Template
 Create `~/projects-wiki/_templates/nota_base.md`. Every time you generate new knowledge, use this frontmatter so my Obsidian can organise it:
