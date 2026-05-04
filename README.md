@@ -1,18 +1,23 @@
 # proyects-wiki
 
-Persistent knowledge base used as the **primary memory fallback** when Engram has no data for a topic. Together they form a two-layer memory system for Claude Code across all projects.
+A file-based persistent memory system for Claude Code. Knowledge lives as plain Markdown, versioned in Git, readable in Obsidian — no plugins, no external services, no lock-in.
 
-## Memory strategy
+## How it works
+
+Claude loads the wiki at session start via a `SessionStart` hook and gets a reminder to update it at the end of each turn via a `Stop` hook. Everything is automatic once the hooks are installed.
 
 ```
-Engram (session memory, fast)
-  └─ hit  → use it
-  └─ miss → check proyects-wiki (this repo)
-               └─ hit  → use it
-               └─ miss → work from scratch, then save to both
+Session starts → INDEX.md injected into context automatically
+       │
+       ▼
+Claude reads relevant notes when needed
+       │
+       ▼
+Session ends → Claude checks if anything is worth saving
+       │
+       ▼
+New note committed → git push
 ```
-
-At the end of every session, key decisions and discoveries are saved to Engram via `mem_session_summary`. Important or long-lived knowledge is also written here as Markdown so it survives Engram resets or is available on machines where Engram is not configured.
 
 ## What lives here
 
@@ -20,30 +25,34 @@ At the end of every session, key decisions and discoveries are saved to Engram v
 - Lessons learned and gotchas per project
 - Reusable snippets
 - Code style guides
-- Project-level context that is too large for a single Engram observation
+- Project-level context
 
 ## Structure
 
 ```
 proyects-wiki/
-├── INDEX.md              # Obsidian dashboard
+├── INDEX.md              # Obsidian dashboard (auto-loaded by hook)
 ├── proyectos/            # Per-project context and decisions
 ├── lecciones/            # Lessons learned, gotchas
 ├── estilos/              # Code style and conventions
 ├── snippets/             # Reusable code
-└── _templates/           # Note templates
+├── arquitectura/         # Architecture decisions
+└── _templates/           # Note templates per type
 ```
+
+## Coming from Engram?
+
+If you used Engram before, you can migrate your observations into this wiki. See the **Post-Install Action** section in [`master-plan.md`](master-plan.md) for the migration steps.
 
 ## Master plan
 
 | File | Description |
 |------|-------------|
-| [`master-plan.md`](master-plan.md) | English setup guide — folder structure, templates, migration steps |
+| [`master-plan.md`](master-plan.md) | English setup guide — hooks, templates, optional Engram migration |
 | [`master-plan.es.md`](master-plan.es.md) | Spanish version |
 
 ## Stack
 
 - **Obsidian** — note-taking front-end with Dataview plugin
-- **Engram** — Claude Code MCP plugin for fast session memory (primary)
-- **proyects-wiki** — this repo, Markdown-based fallback memory (secondary)
 - **Git** — version control and sync across machines
+- **Claude Code hooks** — automatic session load and save reminders

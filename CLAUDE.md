@@ -1,37 +1,36 @@
 # Memory-Wiki: Instrucciones para Claude
 
-Este repo es la memoria persistente principal. Sin Engram, este wiki es la única fuente de contexto entre sesiones.
+Este repo es el sistema de memoria persistente para Claude Code. Knowledge vive como Markdown plano, versionado en Git, sin plugins externos.
 
-## Estrategia de memoria
+## Flujo de sesión (automático via hooks)
 
 ```
-SessionStart hook → inyecta INDEX.md automáticamente como contexto
+SessionStart hook → inyecta INDEX.md como contexto
        │
        ▼
-1. Leer INDEX.md (ya cargado por hook)
-2. Si se necesita más detalle → leer el archivo de la carpeta relevante
-3. Sin datos → trabajar desde cero, guardar al terminar
+Leer notas relevantes cuando haga falta
        │
        ▼
-Stop hook → recuerda revisar si algo merece guardarse
+Stop hook → revisar si algo merece guardarse
+       │
+       ▼
+Nueva nota → commit → push a develop
 ```
 
-## Al iniciar una sesión (automático via hook)
+El hook `SessionStart` en `~/.claude/settings.json` inyecta `INDEX.md` al arrancar. No hace falta leerlo manualmente.
 
-El hook `SessionStart` en `~/.claude/settings.json` inyecta `INDEX.md` como contexto al arrancar. No hace falta leerlo manualmente — ya está cargado.
+Si los hooks no están instalados: leer `~/projects/proyects-wiki/INDEX.md` manualmente al inicio de cada sesión.
 
-Si el hook no está instalado: leer `~/projects/proyects-wiki/INDEX.md` manualmente al inicio.
+## Al terminar una sesión — cuándo guardar
 
-## Al terminar una sesión (automático via hook)
-
-El hook `Stop` recuerda revisar si hay algo para guardar. Guardar cuando:
+Guardar cuando:
 - Se tomó una decisión técnica (arquitectura, patrón, convención)
 - Se resolvió un bug con causa no obvia
 - Se aprendió un gotcha o comportamiento inesperado
 - Se estableció una convención de código o proyecto
 
 No guardar cuando sea:
-- Contexto específico de una sesión o tarea puntual
+- Contexto específico de una tarea puntual
 - Algo ya evidente en el código o en git
 
 ## Cuándo escribir en cada carpeta
@@ -39,7 +38,7 @@ No guardar cuando sea:
 | Carpeta | Cuándo |
 |---|---|
 | `lecciones/` | Bug resuelto, gotcha, aprendizaje técnico reutilizable entre proyectos |
-| `snippets/` | Código que vas a copiar en otro proyecto |
+| `snippets/` | Código que se va a copiar en otro proyecto |
 | `arquitectura/` | Decisión de diseño con alternativas y consecuencias |
 | `proyectos/` | Contexto de un proyecto específico (stack, links, decisiones clave) |
 | `estilos/` | Convención de código, guía de estilo, preferencia de naming |

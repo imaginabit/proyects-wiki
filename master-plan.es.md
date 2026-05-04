@@ -1,6 +1,6 @@
 # 🧠 Instalación del Sistema de Pensamiento: Memory-Wiki Global
 
-Hola Claude. Este archivo contiene las instrucciones para instalar mi "Cerebro Externo" en este PC. Si no hay datos previos de Engram, ignora la migración y céntrate en crear la estructura vacía lista para aprender.
+Hola Claude. Este archivo contiene las instrucciones para instalar mi "Cerebro Externo" en este PC. Si venís de Engram, el paso 6 explica cómo migrar tus observaciones. Si empezás de cero, ignorá la migración y enfocate en crear la estructura lista para aprender.
 
 ## 1. Infraestructura de Directorios
 Clona este repo — la estructura ya está lista:
@@ -56,5 +56,12 @@ Configura el archivo principal para que, al abrir Obsidian, tenga este aspecto:
 ```
 
 ## 6. Acción Post-Instalación
-1. Si existe contenido en `mcp__plugin_engram`, procesa las observaciones duraderas y guárdalas como notas siguiendo `_templates/nota_base.md`. Actualiza `INDEX.md` con las nuevas entradas.
-2. Si NO hay contenido previo en Engram, confirma que la estructura está lista: carpetas existentes, `CLAUDE.md` en su lugar e `INDEX.md` abierto en Obsidian.
+
+**Empezar de cero:** Confirma que la estructura está lista — carpetas creadas, hooks instalados, `INDEX.md` abierto en Obsidian. La memoria empieza a grabarse en tu próxima sesión.
+
+**Venís de Engram (migración opcional):** Si tenés observaciones previas en Engram que vale la pena conservar, procésalas ahora:
+1. Leer observaciones de `mcp__plugin_engram`
+2. Convertir las duraderas (decisiones, bugs, patrones) en notas usando `_templates/nota_base.md`
+3. Descartar las específicas de una sesión o duplicadas
+4. Actualizar `INDEX.md` con las nuevas notas
+5. Commit: `docs: migrate Engram observations to wiki`
