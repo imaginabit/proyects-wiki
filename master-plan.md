@@ -1,19 +1,29 @@
-## Setup: Global Memory System (Claude Code + Obsidian)
+## Setup: Two-Layer Memory System (Claude Code + Obsidian)
 
-Hey Claude. Act as a Platform Engineer. Your goal is to configure my persistent memory system on this PC following these exact instructions.
+Hey Claude. Act as a Platform Engineer. Your goal is to configure a two-layer persistent memory system — Engram as the fast primary layer, and this wiki as the fallback — following these exact instructions.
+
+## Memory Architecture
+
+```
+Engram (session memory, fast)
+  └─ hit  → use it
+  └─ miss → check ~/projects-wiki (this repo)
+               └─ hit  → use it
+               └─ miss → work from scratch, then save to both
+```
+
+**Rule:** Never start from zero if either layer has relevant data. At the end of every session, save to Engram via `mem_session_summary`. For decisions or knowledge that must survive Engram resets or work across machines, also write a note here.
 
 ## 1. Folder Structure
-
-Create the following directory structure under the user's home:
 
 ```bash
 mkdir -p ~/projects-wiki/{proyectos,lecciones,estilos,snippets,_templates}
 touch ~/projects-wiki/INDEX.md
 ```
 
-## 2. Master Note Template
+## 2. Note Template
 
-Every note you create in the wiki must use this frontmatter format:
+Every note created in the wiki must use this frontmatter:
 
 ```markdown
 ---
@@ -26,41 +36,43 @@ estado: #finalizado
 
 # [Title]
 
-## 📝 Context
+## Context
 
-## 💻 Solution / Code
+## Solution / Code
 ```
 
-## 3. Global System Prompt Configuration
+## 3. When to write a note here (vs. Engram only)
 
-Run this configuration command internally so it persists in Claude Code:
+Write to this wiki when the knowledge:
+- Should survive an Engram reset or plugin removal
+- Is needed on a machine without Engram configured
+- Is too large for a single Engram observation
+- Is a stable convention unlikely to change (code style, architecture pattern)
 
-```
-claude config set --system-prompt "Your global memory lives in ~/projects-wiki/. Check INDEX.md at startup. You have permanent read/write permission in ~/projects-wiki/ to keep my knowledge base up to date across projects. Use Obsidian-compatible Markdown [[links]]. Every new note MUST use the defined frontmatter template."
-```
+Write to Engram only when knowledge is:
+- Session-specific or short-lived
+- Already captured in code or git history
 
 ## 4. Content Migration (Engram → Wiki)
 
-Perform the following migration steps:
+When bootstrapping on a new machine or after an Engram reset:
 
 1. **Access** — Read data from `mcp__plugin_engram`.
-2. **Transform** — Convert each Engram entry into an individual `.md` file inside `~/projects-wiki/`.
-3. **Classify** — Move notes to their folder (`/lecciones`, `/snippets`, etc.) based on content.
-4. **Link** — If two notes reference the same technology, add an `[[technology]]` cross-link between them.
-5. **Cleanup** — Discard or merge empty or duplicate Engram entries.
+2. **Transform** — Convert durable observations into individual `.md` files.
+3. **Classify** — Place notes in the right folder (`/lecciones`, `/snippets`, etc.).
+4. **Link** — Cross-link notes that share a technology with `[[technology]]`.
+5. **Cleanup** — Discard empty or duplicate entries.
 
 ## 5. Control Panel (INDEX.md)
-
-Overwrite `~/projects-wiki/INDEX.md` with the following Obsidian dashboard:
 
 ```markdown
 # 🧠 My Digital Brain (Global Wiki)
 
-## 📌 Quick Access
-- [[proyectos/Lista_Proyectos|📁 My Projects]]
-- [[estilos/Guia_Estilo|🎨 Code Style Guide]]
+## Quick Access
+- [[proyectos/Lista_Proyectos|My Projects]]
+- [[estilos/Guia_Estilo|Code Style Guide]]
 
-## 🕒 Latest Lessons (Dataview)
+## Latest Lessons (Dataview)
 \`\`\`dataview
 LIST FROM "lecciones"
 SORT fecha DESC
@@ -71,43 +83,43 @@ LIMIT 5
 *Claude: Update this index every time we add an important section.*
 ```
 
+## 6. Global System Prompt (optional)
+
+```
+claude config set --system-prompt "Your two-layer memory: (1) Engram — check first. (2) ~/projects-wiki — fallback when Engram has no data. Read INDEX.md if starting fresh. Write durable knowledge to both layers. Every note must use the defined frontmatter template."
+```
+
 ---
 
 ## Confirmation Checklist
 
-Claude, once you finish executing these steps, confirm:
+Once setup is complete, confirm:
 
-1. The `~/projects-wiki` folder exists.
-2. You successfully migrated Engram data.
-3. The `claude config set` command executed correctly.
+1. `~/projects-wiki` folder structure exists.
+2. Engram is configured and reachable.
+3. At least one note has been migrated or created as a test.
 
 ---
 
 ## Frequently Used Terminal Commands
 
-```markdown
----
-fecha: 2024-03-20
-tipo: #snippet
-proyecto_origen: [[Global]]
-tecnologias: [#terminal, #bash, #git]
-estado: #finalizado
----
+```bash
+# Sync wiki to remote
+cd ~/projects-wiki && git add . && git commit -m "docs: update memory" && git push
+
+# View Claude logs
+claude logs
+
+# Current Claude config
+claude config get
 ```
 
-### Memory Management
-- **View Claude logs:** `claude logs`
-- **Current config:** `claude config get`
-- **Sync wiki:** `cd ~/projects-wiki && git add . && git commit -m "Update memory" && git push`
+### Git Helpers
 
-### General Development
-- **Clear Node cache:** `npm cache clean --force`
-- **Kill process on port (e.g. 3000):** `lsof -ti:3000 | xargs kill -9`
-- **Docker: clean everything:** `docker system prune -a --volumes`
+```bash
+# Undo last commit (keep changes staged)
+git reset --soft HEAD~1
 
-### Git
-- **Undo last commit (keep changes):** `git reset --soft HEAD~1`
-- **Delete already-merged local branches:** `git branch --merged | grep -v "\*" | xargs -n 1 git branch -d`
-
----
-*Claude: If I run a complex command successfully in the terminal, ask me whether to add it to this list automatically.*
+# Delete already-merged local branches
+git branch --merged | grep -v "\*" | xargs -n 1 git branch -d
+```
