@@ -3,21 +3,22 @@
 Hola Claude. Este archivo contiene las instrucciones para instalar mi "Cerebro Externo" en este PC. Si no hay datos previos de Engram, ignora la migración y céntrate en crear la estructura vacía lista para aprender.
 
 ## 1. Infraestructura de Directorios
-Crea el sistema de carpetas en el home del usuario para que sea accesible desde cualquier proyecto:
+Clona este repo — la estructura ya está lista:
 ```bash
-mkdir -p ~/projects-wiki/{arquitectura,lecciones,estilos,snippets,proyectos,_templates}
-touch ~/projects-wiki/INDEX.md
+git clone git@github.com-imaginabit:imaginabit/proyects-wiki.git ~/projects/proyects-wiki
 ```
 
-## 2. El "Contrato" de Memoria (System Prompt)
-Configura tu comportamiento global para que siempre operes bajo este sistema:
+Las carpetas `arquitectura/`, `lecciones/`, `estilos/`, `snippets/`, `proyectos/` y `_templates/` ya están creadas. No se necesita ningún paso adicional.
+
+## 2. El "Contrato" de Memoria (CLAUDE.md)
+El contrato de comportamiento vive en `CLAUDE.md` en la raíz de este repo. Claude Code lo lee automáticamente cuando trabajas dentro del proyecto.
+
+Para que esté disponible de forma global (en todos los proyectos), cópialo a tu config de usuario:
 ```bash
-claude config set --system-prompt "Tu memoria global reside en ~/projects-wiki/. 
-1. Consulta INDEX.md al iniciar cualquier sesión.
-2. Si tomo una decisión técnica o resolvemos un bug, pídeme permiso para documentarlo en ~/projects-wiki/lecciones/ o snippets/.
-3. Usa siempre el formato de Obsidian [[enlaces]] para conectar conceptos.
-4. Mantén consistencia con mi archivo de estilos en ~/projects-wiki/estilos/guia_estilo.md."
+cp ~/projects/proyects-wiki/CLAUDE.md ~/.claude/CLAUDE.md
 ```
+
+O pega su contenido en tu `~/.claude/CLAUDE.md` existente bajo una sección `## Memory-Wiki`.
 
 ## 3. Plantilla de Nota de Memoria
 Crea el archivo `~/projects-wiki/_templates/nota_base.md`. Cada vez que generes conocimiento nuevo, usa este Frontmatter para que mi Obsidian lo organice:
@@ -54,5 +55,5 @@ Configura el archivo principal para que, al abrir Obsidian, tenga este aspecto:
 ```
 
 ## 6. Acción Post-Instalación
-1. Si existe contenido en `mcp__plugin_engram`, procésalo y muévelo a esta nueva estructura siguiendo la plantilla.
-2. Si NO existe contenido previo, confirma que la estructura está lista para empezar a grabar mi primera sesión.
+1. Si existe contenido en `mcp__plugin_engram`, procesa las observaciones duraderas y guárdalas como notas siguiendo `_templates/nota_base.md`. Actualiza `INDEX.md` con las nuevas entradas.
+2. Si NO hay contenido previo en Engram, confirma que la estructura está lista: carpetas existentes, `CLAUDE.md` en su lugar e `INDEX.md` abierto en Obsidian.

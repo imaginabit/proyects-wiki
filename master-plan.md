@@ -3,21 +3,22 @@
 Hey Claude. This file contains the instructions to install my "External Brain" on this PC. If there is no prior Engram data, skip the migration and focus on creating the empty structure, ready to start learning.
 
 ## 1. Directory Infrastructure
-Create the folder system under the user's home so it is accessible from any project:
+Clone this repo — the structure is already ready:
 ```bash
-mkdir -p ~/projects-wiki/{arquitectura,lecciones,estilos,snippets,proyectos,_templates}
-touch ~/projects-wiki/INDEX.md
+git clone git@github.com-imaginabit:imaginabit/proyects-wiki.git ~/projects/proyects-wiki
 ```
 
-## 2. The Memory "Contract" (System Prompt)
-Configure your global behaviour so you always operate under this system:
+The folders `arquitectura/`, `lecciones/`, `estilos/`, `snippets/`, `proyectos/`, and `_templates/` are already created. No extra setup needed.
+
+## 2. The Memory "Contract" (CLAUDE.md)
+The behaviour contract lives in `CLAUDE.md` at the root of this repo. Claude Code reads it automatically whenever you work inside the project.
+
+To make it available globally (across all projects), copy it to your user Claude config:
 ```bash
-claude config set --system-prompt "Your global memory lives in ~/projects-wiki/.
-1. Check INDEX.md at the start of every session.
-2. If we make a technical decision or fix a bug, ask me before documenting it in ~/projects-wiki/lecciones/ or snippets/.
-3. Always use Obsidian [[links]] format to connect concepts.
-4. Stay consistent with my style guide at ~/projects-wiki/estilos/guia_estilo.md."
+cp ~/projects/proyects-wiki/CLAUDE.md ~/.claude/CLAUDE.md
 ```
+
+Or paste its contents into your existing `~/.claude/CLAUDE.md` under a `## Memory-Wiki` section.
 
 ## 3. Memory Note Template
 Create `~/projects-wiki/_templates/nota_base.md`. Every time you generate new knowledge, use this frontmatter so my Obsidian can organise it:
@@ -54,5 +55,5 @@ Set up the main file so that, when Obsidian opens, it looks like this:
 ```
 
 ## 6. Post-Install Action
-1. If content exists in `mcp__plugin_engram`, process it and move it into this new structure following the template.
-2. If NO prior content exists, confirm the structure is ready to record the first session.
+1. If content exists in `mcp__plugin_engram`, process durable observations and save them as notes following `_templates/nota_base.md`. Update `INDEX.md` with the new entries.
+2. If NO prior Engram content exists, confirm the structure is ready: folders exist, `CLAUDE.md` is in place, and `INDEX.md` is open in Obsidian.
